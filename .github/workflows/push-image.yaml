@@ -5,16 +5,16 @@ name: push-image
 on:
   push:
     paths-ignore:
-      - .github/*
+      - .github
   workflow_dispatch:
     inputs:
-      major_version_number:
-        description: Basis for semantic version number
+      manual-workflow-comment:
+        description: Manual workflow_dispatch needs at least one input parameter. Use this for comments on the reason for running the workflow manually.
         required: false
-        default: '0.0'
+        default: Manual workflow_dispatch trigger
 env:
   IMAGE_NAME: ghcr.io/${{github.repository}}
-  SEMANTIC_VERSION: ${{ github.event.inputs.major_version_number }}.$GITHUB_RUN_NUMBER 
+  SEMANTIC_VERSION: "0.0.${GITHUB_RUN_NUMBER}"
 defaults:
   run:
     shell: bash -ex {0} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#custom-shell
@@ -27,6 +27,7 @@ jobs:
         continue-on-error: true
         run: sudo docker pull $IMAGE_NAME:$GITHUB_REF_NAME-latest
       - run: |
+          export 
           sudo docker build $GITHUB_WORKSPACE \
           --build-arg BUILD_COMMIT=$GITHUB_SHA \
           --tag $IMAGE_NAME:$GITHUB_SHA \
