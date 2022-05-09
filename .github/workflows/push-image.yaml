@@ -24,6 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout/blob/main/action.yml
       - shell: bash {0} # try to pull image if available
+        continue-on-error: true
         run: sudo docker pull $IMAGE_NAME:$GITHUB_REF_NAME-latest
       - run: |
           sudo docker build $GITHUB_WORKSPACE \
