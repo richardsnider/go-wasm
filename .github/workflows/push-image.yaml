@@ -14,7 +14,7 @@ on:
         default: Manual workflow_dispatch trigger
 env:
   IMAGE_NAME: ghcr.io/${{github.repository}}
-  SEMANTIC_VERSION: 0.0.$GITHUB_RUN_NUMBER
+  SEMANTIC_VERSION: "0.0.$GITHUB_RUN_NUMBER"
 defaults:
   run:
     shell: bash -ex {0} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#custom-shell
