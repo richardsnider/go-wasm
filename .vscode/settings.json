@@ -1,0 +1,8 @@
+{
+  "gopls": {
+    "build.env": {
+      "GOARCH": "wasm",
+      "GOOS": "js"
+    }
+  }
+}
