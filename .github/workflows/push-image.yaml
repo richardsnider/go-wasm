@@ -14,12 +14,11 @@ on:
         default: Manual workflow_dispatch trigger
 env:
   IMAGE_NAME: ghcr.io/${{github.repository}}
-  SEMANTIC_VERSION: "0.0.${GITHUB_RUN_NUMBER}"
 defaults:
   run:
     shell: bash -ex {0} # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#custom-shell
 jobs:
-  push-image-job:
+  pull-build-tag-push:
     runs-on: ubuntu-latest # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout/blob/main/action.yml
@@ -27,16 +26,19 @@ jobs:
         continue-on-error: true
         run: sudo docker pull $IMAGE_NAME:$GITHUB_REF_NAME-latest
       - run: |
-          export 
           sudo docker build $GITHUB_WORKSPACE \
           --build-arg BUILD_COMMIT=$GITHUB_SHA \
           --tag $IMAGE_NAME:$GITHUB_SHA \
-          --tag $IMAGE_NAME:$SEMANTIC_VERSION \
           --tag $IMAGE_NAME:$GITHUB_REF_NAME-latest \
           --cache-from $IMAGE_NAME:$GITHUB_REF_NAME-latest
-          echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-          sudo docker push $IMAGE_NAME --all-tags
       - if: $GITHUB_REF_NAME == ${{ github.event.repository.default_branch }}
         run: |
+          export SEMANTIC_VERSION=0.0.$GITHUB_RUN_NUMBER
+          sudo docker tag $IMAGE_NAME:$GITHUB_SHA $IMAGE_NAME:$SEMANTIC_VERSION
+          sudo docker tag $IMAGE_NAME:$GITHUB_SHA $IMAGE_NAME:latest
           git tag $SEMANTIC_VERSION
           git push origin $SEMANTIC_VERSION
+      - run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          sudo docker push $IMAGE_NAME --all-tags
+
