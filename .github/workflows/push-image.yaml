@@ -2,7 +2,7 @@
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
 # https://docs.github.com/en/actions/learn-github-actions/environment-variables
 name: push-image
-on:
+on: # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads
   push:
     paths-ignore:
       - .github/**
@@ -23,13 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout/blob/main/action.yml
       - id: build
-        run: |
-          sudo docker build $GITHUB_WORKSPACE \
-          --build-arg BUILD_COMMIT=$GITHUB_SHA \
-          --tag $IMAGE_NAME:$GITHUB_SHA \
-          --tag $IMAGE_NAME:$GITHUB_REF_NAME-latest
+        run: sudo docker build $GITHUB_WORKSPACE --build-arg BUILD_COMMIT=$GITHUB_SHA --tag $IMAGE_NAME:$GITHUB_SHA --tag $IMAGE_NAME:$GITHUB_REF_NAME-latest
       - id: tag
-        if: $GITHUB_REF_NAME == ${{ github.event.repository.default_branch }}
+        if: github.ref_name == github.event.repository.default_branch
         run: |
           export SEMANTIC_VERSION=0.0.$GITHUB_RUN_NUMBER
           sudo docker tag $IMAGE_NAME:$GITHUB_SHA $IMAGE_NAME:$SEMANTIC_VERSION
@@ -40,4 +36,3 @@ jobs:
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
           sudo docker push $IMAGE_NAME --all-tags
-
