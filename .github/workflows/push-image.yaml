@@ -4,8 +4,10 @@
 name: push-image
 on: # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads
   push:
-    paths-ignore:
-      - .github/**
+    paths:
+      - Dockerfile
+      - go.mod
+      - pkg/**
   workflow_dispatch:
     inputs:
       manual-workflow-comment:
