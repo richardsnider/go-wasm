@@ -33,4 +33,6 @@ jobs:
           git tag $SEMANTIC_VERSION
           git push origin $SEMANTIC_VERSION
       - id: push
-        run: sudo docker push $IMAGE_NAME --all-tags
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          sudo docker push $IMAGE_NAME --all-tags
