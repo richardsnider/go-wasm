@@ -6,9 +6,9 @@ import (
 	"syscall/js"
 )
 
-var appVersion = `1.0`
-var buildDateVersionLinkerFlag string
+var semanticVersionLinkerFlag string
 var buildCommitLinkerFlag string
+var buildDateVersionLinkerFlag string
 
 type buildMetaData struct {
 	Version          string `json:"Version"`
@@ -31,7 +31,7 @@ func jsEchoFunction() js.Func {
 
 func main() {
 	wasmBuildMetaData := buildMetaData{
-		Version:          appVersion,
+		Version:          semanticVersionLinkerFlag,
 		BuildGitCommit:   buildCommitLinkerFlag,
 		BuildDateVersion: buildDateVersionLinkerFlag,
 	}
