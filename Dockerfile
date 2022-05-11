@@ -1,4 +1,4 @@
-FROM registry.hub.docker.com/library/golang:alpine AS build
+FROM docker.io/library/golang:alpine AS build
 
 WORKDIR /src/
 COPY ./pkg /src/
