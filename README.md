@@ -6,3 +6,5 @@ This app uses [syscall/js](https://github.com/golang/go/tree/master/src/syscall/
 - https://github.com/golang-standards/project-layout
 - https://github.com/moby/moby/blob/master/cmd/dockerd/docker.go
 - https://github.com/containerd/containerd
+- https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+- https://docs.github.com/en/rest
