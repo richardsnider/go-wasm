@@ -5,7 +5,8 @@ COPY ./pkg /src/
 COPY ./go.mod /src/
 RUN cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" /bin/wasm_exec.js
 ARG BUILD_COMMIT
-RUN GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -ldflags "-X main.buildCommitLinkerFlag=$BUILD_COMMIT -X main.semanticVersionLinkerFlag='$SEMANTIC_VERSION' -X main.buildDateVersionLinkerFlag=$(date +'%Y.%m.%d.%H.%M.%S')" -o /bin/app.wasm
+ARG SEMANTIC_VERSION
+RUN GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -ldflags "-X main.buildCommitLinkerFlag=$BUILD_COMMIT -X main.semanticVersionLinkerFlag=$SEMANTIC_VERSION -X main.buildDateVersionLinkerFlag=$(date +'%Y.%m.%d.%H.%M.%S')" -o /bin/app.wasm
 
 FROM nginx:latest
 COPY ./index.html /usr/share/nginx/html/index.html
